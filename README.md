@@ -50,10 +50,10 @@ Usage
 
    This generates:
 
-   *output/ca.crt.pem*
-   *output/ca.csr.pem*
-   *output/ca.key.pem*
-   *output/ca.public.pem*
+   *output/ca.crt.pem*<br />
+   *output/ca.csr.pem*<br />
+   *output/ca.key.pem*<br />
+   *output/ca.public.pem*<br />
 
 2. Create the subordinate identity:
 
@@ -63,8 +63,8 @@ Usage
 
    This generates:
 
-   *output/sub.csr.pem*
-   *output/sub.public.pem*
+   *output/sub.csr.pem*<br />
+   *output/sub.public.pem*<br />
 
 3. Sign the subordinate identity:
 
@@ -74,7 +74,7 @@ Usage
 
    This generates:
 
-   *sub.crt.pem*
+   *sub.crt.pem*<br />
 
 4. You can also verify that the subordinate identity was signed by our CA:
 
