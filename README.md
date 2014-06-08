@@ -2,7 +2,7 @@ Overview
 --------
 
 The purpose of this tiny project is just to package the logic needed to build 
-both CA certificates and a signed, subordinate certificate.
+both CA certificates and a regulary, signed certificate.
 
 I find that I often need to do this, and/or need to do this as part of other 
 projects as a starting example. This project assumes some defaults, and makes 
@@ -18,12 +18,12 @@ Scripts
 
 This project encapsulates four executable scripts, three of them Python:
 
-| Name                  | Description                                                         |
-| --------------------- | ------------------------------------------------------------------- |
-| create_ca.py          | Create CA keys and certificate                                      |
-| create_subordinate.py | Create subordinate keys                                             |
-| sign_sub.py           | Create a signed cert from the CA identity                           |
-| verify_ca.sh          | Verify that the signed subordinate certificate was issued by the CA |
+| Name                  | Description                                             |
+| --------------------- | --------------------------------------------------------|
+| create_ca.py          | Create CA keys and certificate                          |
+| create.py             | Create normal keys                                      |
+| sign.py               | Create a signed certificate using the CA identity       |
+| verify_ca.sh          | Verify that the signed certificate was issued by the CA |
 
 The Python scripts use M2Crypto to manipulate the keys/certificates.
 
@@ -55,30 +55,30 @@ Usage
    *output/ca.key.pem*<br />
    *output/ca.public.pem*<br />
 
-2. Create the subordinate identity:
+2. Create the normal keys:
 
    ```
-   $ ./create_subordinate.py
-   ```
-
-   This generates:
-
-   *output/sub.csr.pem*<br />
-   *output/sub.public.pem*<br />
-
-3. Sign the subordinate identity:
-
-   ```
-   $ ./sign_sub.py
+   $ ./create.py
    ```
 
    This generates:
 
-   *sub.crt.pem*<br />
+   *output/normal.csr.pem*<br />
+   *output/normal.public.pem*<br />
 
-4. You can also verify that the subordinate identity was signed by our CA:
+3. Sign the identity:
+
+   ```
+   $ ./sign.py
+   ```
+
+   This generates:
+
+   *normal.crt.pem*<br />
+
+4. You can also verify that the identity was signed by our CA:
 
    ```
    $ ./verify_ca.sh 
-   output/sub.crt.pem: OK
+   output/normal.crt.pem: OK
    ```

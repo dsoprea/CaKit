@@ -9,12 +9,12 @@ _CA_PASSPHRASE = 'test'
 
 _CA_KEY_PEM_FILENAME = 'output/ca.key.pem'
 _CA_CRT_PEM_FILENAME = 'output/ca.crt.pem'
-_SUB_CSR_PEM_FILENAME = 'output/sub.csr.pem'
+_NORMAL_CSR_PEM_FILENAME = 'output/normal.csr.pem'
 
-with open(os.path.join(_OUTPUT_PATH, 'sub.crt.pem'), 'w') as f:
+with open(os.path.join(_OUTPUT_PATH, 'normal.crt.pem'), 'w') as f:
     crt_pem = ssl_library.sign(
                 _CA_KEY_PEM_FILENAME,
                 _CA_CRT_PEM_FILENAME,
-                _SUB_CSR_PEM_FILENAME, 
+                _NORMAL_CSR_PEM_FILENAME, 
                 passphrase=_CA_PASSPHRASE)
     f.write(crt_pem)
