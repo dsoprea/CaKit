@@ -64,6 +64,7 @@ Usage
    This generates:
 
    *output/normal.csr.pem*<br />
+   *output/normal.key.pem*<br />
    *output/normal.public.pem*<br />
 
 3. Sign the identity:

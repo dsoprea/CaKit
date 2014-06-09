@@ -199,7 +199,8 @@ def create_csr(**name_fields):
     for k, v in name_fields.items():
         setattr(name, k, v)
 
-    public_pem = rsa_to_pem_public(rsa)
+    public_key_pem = rsa_to_pem_public(rsa)
+    private_key_pem = rsa_to_pem_private(rsa)
     csr_pem = x.as_pem()
 
-    return (public_pem, csr_pem)
+    return (private_key_pem, public_key_pem, csr_pem)
