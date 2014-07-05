@@ -14,13 +14,18 @@ parser.add_argument('-n', '--name',
                     default='normal', 
                     help='Name used for the filenames')
 
+parser.add_argument('-cn', '--common-name',
+                    help='Name used for the filenames')
+
 args = parser.parse_args()
+
+common_name = args.common_name if args.common_name else args.name + '.local'
 
 name = {
     'C': 'US',
     'ST': 'Florida',
     'O': 'Some Entity',
-    'CN': args.name + '.local' }
+    'CN': common_name }
 
 (private_key_pem, public_key_pem, csr_pem) = ssl_library.create_csr(**name)
 

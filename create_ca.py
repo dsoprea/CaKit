@@ -3,17 +3,25 @@
 import os
 import os.path
 import datetime
+import argparse
 
 import ssl_library
 
 _OUTPUT_PATH = 'output'
 _CA_PASSPHRASE = 'test'
 
+parser = argparse.ArgumentParser(description='Generate an identity')
+parser.add_argument('-cn', '--common-name',
+                    default='ca.local',
+                    help='Name used for the filenames')
+
+args = parser.parse_args()
+
 name_fields = {
     'C': 'US',
     'ST': 'Florida',
     'L': 'Boynton Beach',
-    'CN': 'ca.local' }
+    'CN': args.common_name }
 
 name = ssl_library.build_name_from_dict(**name_fields)
 validity_td = datetime.timedelta(days=1000)
