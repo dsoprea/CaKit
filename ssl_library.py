@@ -32,7 +32,7 @@ def pem_certificate_to_x509(cert_pem):
     return M2Crypto.X509.load_cert_string(cert_pem)
 
 def new_cert(ca_private_key_pem, csr_pem, validity_td, issuer_name, bits=2048,
-             is_ca=False, passphrase=None):
+             is_ca=False, passphrase=None, allow_auth=False):
     ca_rsa = pem_private_to_rsa(
                 ca_private_key_pem, 
                 passphrase=passphrase)
@@ -67,8 +67,19 @@ def new_cert(ca_private_key_pem, csr_pem, validity_td, issuer_name, bits=2048,
     cert.set_issuer(issuer_name)
     cert.set_pubkey(public_key) 
 
-    ext = M2Crypto.X509.new_extension('basicConstraints', 'CA:FALSE')
+    ext = M2Crypto.X509.new_extension(
+            'basicConstraints', 
+            'CA:' + str(is_ca).upper())
+
     cert.add_ext(ext)
+
+    if allow_auth is True:
+        eku = M2Crypto.X509.new_extension(
+                'extendedKeyUsage', 
+                'clientAuth',
+                critical=1)
+
+        cert.add_ext(eku)
 
     pkey = M2Crypto.EVP.PKey()
     pkey.assign_rsa(ca_rsa)
@@ -78,7 +89,8 @@ def new_cert(ca_private_key_pem, csr_pem, validity_td, issuer_name, bits=2048,
 
     return cert_pem
 
-def sign(ca_key_filepath, ca_crt_filepath, csr_filepath, passphrase=None):
+def sign(ca_key_filepath, ca_crt_filepath, csr_filepath, passphrase=None, 
+         allow_auth=False):
     with open(ca_crt_filepath) as f:
         ca_cert_pem = f.read()
 
@@ -98,7 +110,8 @@ def sign(ca_key_filepath, ca_crt_filepath, csr_filepath, passphrase=None):
             csr_pem, 
             validity_td, 
             issuer_name, 
-            passphrase=passphrase)
+            passphrase=passphrase,
+            allow_auth=allow_auth)
 
 def new_selfsigned_cert(issuer_name, passphrase, validity_td, bits=2048, 
                         is_ca=False):
@@ -186,7 +199,7 @@ def build_name_from_dict(**kwargs):
 
     return name
 
-def create_csr(**name_fields):
+def create_csr(allow_auth=False, **name_fields):
     pk = M2Crypto.EVP.PKey()
     x = M2Crypto.X509.Request()
 
@@ -198,6 +211,17 @@ def create_csr(**name_fields):
 
     for k, v in name_fields.items():
         setattr(name, k, v)
+
+    if allow_auth is True:
+        eku = M2Crypto.X509.new_extension(
+                'extendedKeyUsage', 
+                'clientAuth',
+                critical=1)
+
+        stack = M2Crypto.X509.X509_Extension_Stack()
+        stack.push(eku)
+
+        x.add_extensions(stack)
 
     public_key_pem = rsa_to_pem_public(rsa)
     private_key_pem = rsa_to_pem_private(rsa)

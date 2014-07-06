@@ -17,6 +17,11 @@ parser.add_argument('-n', '--name',
 parser.add_argument('-cn', '--common-name',
                     help='Name used for the filenames')
 
+parser.add_argument('-a', '--allow_auth',
+                    action='store_true',
+                    help='Whether to allow this certificate to be used for '\
+                         'authentication.')
+
 args = parser.parse_args()
 
 common_name = args.common_name if args.common_name else args.name + '.local'
@@ -27,7 +32,8 @@ name = {
     'O': 'Some Entity',
     'CN': common_name }
 
-(private_key_pem, public_key_pem, csr_pem) = ssl_library.create_csr(**name)
+r = ssl_library.create_csr(allow_auth=args.allow_auth, **name)
+(private_key_pem, public_key_pem, csr_pem) = r
 
 if os.path.exists(_OUTPUT_PATH) is False:
     os.mkdir(_OUTPUT_PATH)
