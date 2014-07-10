@@ -1,6 +1,8 @@
-/output/
 /bin/
 /lib/
 /include/
 /.Python
 *.pyc
+/ca_kit.egg-info/
+/dist/
+/build/

@@ -1,0 +1,1 @@
+ck/resources/README.rst

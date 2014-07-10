@@ -1,0 +1,56 @@
+#!/usr/bin/env python2.7
+
+import sys
+import os.path
+dev_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+sys.path.insert(0, dev_path)
+
+import argparse
+
+import ck.ssl_library
+
+parser = argparse.ArgumentParser(description='Generate an identity')
+
+parser.add_argument('-n', '--name',
+                    default='normal', 
+                    help='Name used for the filenames')
+
+parser.add_argument('-o', '--output-path',
+                    default='', 
+                    help='Output path')
+
+parser.add_argument('-p', '--passphrase',
+                    default='test', 
+                    help='Output path')
+
+# We put this as an option for both the creation -and- the signing. M2Crypto
+# doesn't allow us to read the extensions from a CSR, but this is fine for 
+# ca_key.
+parser.add_argument('-a', '--allow_auth',
+                    action='store_true',
+                    help='Whether to allow this certificate to be used for '\
+                         'authentication.')
+
+args = parser.parse_args()
+
+if args.output_path != '':
+    output_path = args.output_path
+else:
+    sys.stdout.write("Please confirm output directory []: ")
+    output_path = raw_input().strip()
+
+_CA_KEY_PEM_FILENAME = os.path.join(output_path, 'ca.key.pem')
+_CA_CRT_PEM_FILENAME = os.path.join(output_path, 'ca.crt.pem')
+
+_NORMAL_CSR_PEM_FILENAME = os.path.join(
+                            output_path, 
+                            args.name + '.csr.pem')
+
+with open(os.path.join(output_path, args.name + '.crt.pem'), 'w') as f:
+    crt_pem = ck.ssl_library.sign(
+                _CA_KEY_PEM_FILENAME,
+                _CA_CRT_PEM_FILENAME,
+                _NORMAL_CSR_PEM_FILENAME, 
+                passphrase=args.passphrase,
+                allow_auth=args.allow_auth)
+    f.write(crt_pem)
