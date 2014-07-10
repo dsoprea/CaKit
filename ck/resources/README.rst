@@ -2,34 +2,40 @@
 Overview
 --------
 
-The purpose of this tiny project is just to package the logic needed to build 
-both CA certificates and a regulary, signed certificate.
+The purpose of this project is to package the logic needed to:
+
+- Build a CA certificates
+- Build a regular certificate
+- Sign the regular certificate with the CA certificate
+- Verify that the regular certificate is signed with the CA certificate
 
 I find that I often need to do this, and/or need to do this as part of other 
-projects as a starting example. This project assumes some defaults, and makes 
-it easy to establish a CA and build certificates.
+projects to prove a design. This project assumes some defaults, and makes it 
+ridiculously easy to establish a CA and build certificates. You can pass
+parameters to change the name of the output files, and the path that they are
+written to.
 
-The include scripts are largely Python. So, for those who'd like a quick 
-tutorial on how to do these tasks via Python, they might also use this project
-as a roadmap.
+The scripts are comprised of Python logic. So, for those who'd like a quick 
+tutorial on how to do these tasks via Python, they can use this project as a 
+roadmap.
 
 
 -------
 Scripts
 -------
 
-This project encapsulates four executable scripts, three of them Python:
+This project encapsulates four executable scripts.
 
-------------   -------------------------------------------------------
+============   ============================================================
 Name           Description
-------------   -------------------------------------------------------
+============   ============================================================
 ck_create_ca   Create CA keys and certificate
 ck_create      Create normal keys
-ck_sign        Create a signed certificate using the CA identity
+ck_sign        Create a signed certificate using the CA certificate and key
 ck_verify_ca   Verify that the signed certificate was issued by the CA
-------------   -------------------------------------------------------
+============   ============================================================
 
-The Python scripts use M2Crypto to manipulate the keys/certificates.
+The Python scripts use M2Crypto_ to manipulate the keys/certificates.
 
 
 ------------
@@ -72,7 +78,7 @@ prompted to confirm.
    - *normal.key.pem*
    - *normal.public.pem*
 
-3. Sign the identity::
+3. Sign the request::
 
       $ ck_sign
       Please confirm output directory []: output
@@ -81,8 +87,10 @@ prompted to confirm.
 
    - *normal.crt.pem*
 
-4. You can also verify that the identity was signed by our CA::
+4. Verify that the certificate was signed by our CA::
 
       $ ck_verify_ca
       Please confirm input directory []: output
-      Verified.
+      Is valid? True
+
+.. _M2Crypto: https://github.com/martinpaljak/M2Crypto

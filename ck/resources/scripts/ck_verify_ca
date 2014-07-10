@@ -6,7 +6,8 @@ dev_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '
 sys.path.insert(0, dev_path)
 
 import argparse
-import subprocess
+
+import ck.ssl_library
 
 parser = argparse.ArgumentParser(description='Check a certificate against the CA')
 
@@ -26,15 +27,14 @@ else:
     sys.stdout.write("Please confirm input directory []: ")
     output_path = raw_input().strip()
 
-cmd = ['openssl', 
-       'verify', 
-       '-verbose', 
-       '-CAfile', os.path.join(output_path, 'ca.crt.pem'), 
-       os.path.join(output_path, args.name + '.crt.pem')]
+with open(os.path.join(output_path, 'ca.crt.pem')) as f:
+    ca_crt_pem = f.read()
 
-p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-if p.wait() != 0:
-    raise EnvironmentError("Verification failed:\n%s" % 
-                           (p.stderr.read(),))
+with open(os.path.join(output_path, args.name + '.crt.pem')) as f:
+    crt_pem = f.read()
 
-print("Verified.")
+is_valid = ck.ssl_library.verify_ca(ca_crt_pem, crt_pem)
+
+print("Is valid? %s" % (is_valid,))
+
+sys.exit(0 if is_valid is True else 1)

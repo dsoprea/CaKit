@@ -89,20 +89,11 @@ def new_cert(ca_private_key_pem, csr_pem, validity_td, issuer_name, bits=2048,
 
     return cert_pem
 
-def sign(ca_key_filepath, ca_crt_filepath, csr_filepath, passphrase=None, 
+def sign(ca_private_key_pem, ca_cert_pem, csr_pem, passphrase=None, 
          allow_auth=False):
-    with open(ca_crt_filepath) as f:
-        ca_cert_pem = f.read()
-
-    with open(ca_key_filepath) as f:
-        ca_private_key_pem = f.read()
-
     ca_cert = pem_certificate_to_x509(ca_cert_pem)
 
     issuer_name = ca_cert.get_issuer()
-
-    with open(csr_filepath) as f:
-        csr_pem = f.read()
 
     validity_td = datetime.timedelta(days=400)
     return new_cert(
@@ -228,3 +219,9 @@ def create_csr(allow_auth=False, **name_fields):
     csr_pem = x.as_pem()
 
     return (private_key_pem, public_key_pem, csr_pem)
+
+def verify_ca(ca_crt_pem, crt_pem):
+    ca_crt = M2Crypto.X509.load_cert_string(ca_crt_pem)
+    crt = M2Crypto.X509.load_cert_string(crt_pem)
+
+    return crt.verify(ca_crt.get_pubkey()) == 1

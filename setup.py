@@ -14,7 +14,7 @@ with open(os.path.join(app_path, 'resources', 'requirements.txt')) as f:
 setuptools.setup(
       name='ca_kit',
       version=ck.__version__,
-      description="Certificate authority test harness",
+      description="Certificate-authority test harness.",
       long_description=long_description,
       classifiers=[],
       keywords='ssl openssl ca certificate',

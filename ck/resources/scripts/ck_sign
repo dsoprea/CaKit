@@ -46,11 +46,21 @@ _NORMAL_CSR_PEM_FILENAME = os.path.join(
                             output_path, 
                             args.name + '.csr.pem')
 
+with open(_CA_KEY_PEM_FILENAME) as f:
+    ca_key_pem = f.read()
+
+with open(_CA_CRT_PEM_FILENAME) as f:
+    ca_crt_pem = f.read()
+
+with open(_NORMAL_CSR_PEM_FILENAME) as f:
+    csr_pem = f.read()
+
 with open(os.path.join(output_path, args.name + '.crt.pem'), 'w') as f:
     crt_pem = ck.ssl_library.sign(
-                _CA_KEY_PEM_FILENAME,
-                _CA_CRT_PEM_FILENAME,
-                _NORMAL_CSR_PEM_FILENAME, 
+                ca_key_pem,
+                ca_crt_pem,
+                csr_pem, 
                 passphrase=args.passphrase,
                 allow_auth=args.allow_auth)
+
     f.write(crt_pem)
