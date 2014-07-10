@@ -14,7 +14,7 @@ parser.add_argument('-n', '--name',
                     default='normal', 
                     help='Name used for the filenames')
 
-parser.add_argument('-cn', '--common-name',
+parser.add_argument('-c', '--common-name',
                     help='Name used for the filenames')
 
 parser.add_argument('-a', '--allow_auth',

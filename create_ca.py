@@ -11,7 +11,7 @@ _OUTPUT_PATH = 'output'
 _CA_PASSPHRASE = 'test'
 
 parser = argparse.ArgumentParser(description='Generate an identity')
-parser.add_argument('-cn', '--common-name',
+parser.add_argument('-c', '--common-name',
                     default='ca.local',
                     help='Name used for the filenames')
 
